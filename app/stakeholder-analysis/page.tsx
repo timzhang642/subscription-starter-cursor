@@ -591,8 +591,8 @@ export default function StakeholderAnalysis() {
     const LABEL_WIDTH = 120;
     const LABEL_HEIGHT = 24;
 
-    const simulation = d3.forceSimulation(graphData.nodes)
-      .force("link", d3.forceLink(graphData.links).id((d: any) => d.id).distance(300))
+    const simulation = d3.forceSimulation<Node>(graphData.nodes)
+      .force("link", d3.forceLink<Node, Link>(graphData.links).id((d) => d.id).distance(300))
       .force("charge", d3.forceManyBody().strength(-2000))
       .force("center", d3.forceCenter(dimensions.width / 2, dimensions.height / 2));
 
@@ -731,7 +731,12 @@ export default function StakeholderAnalysis() {
       nodes.attr("transform", (d: any) => `translate(${d.x},${d.y})`);
     });
 
-    return () => simulation.stop();
+    // Properly type the cleanup function
+    const cleanup = () => {
+      simulation.stop();
+    };
+
+    return cleanup;
   }, [graphData, dimensions.width, dimensions.height]);
 
   return (
