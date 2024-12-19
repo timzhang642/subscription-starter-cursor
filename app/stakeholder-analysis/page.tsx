@@ -616,7 +616,7 @@ export default function StakeholderAnalysis() {
     const nodeGroup = svg.append("g");
 
     // Add links
-    const links = linkGroup.selectAll("path")
+    const links = linkGroup.selectAll<SVGPathElement, Link>("path")
       .data(graphData.links)
       .join("path")
       .attr("stroke", "#4B5563")
@@ -625,18 +625,9 @@ export default function StakeholderAnalysis() {
       .attr("fill", "none");
 
     // Add edge labels
-    const labelContainers = labelGroup.selectAll("g")
+    const labelContainers = labelGroup.selectAll<SVGGElement, Link>("g")
       .data(graphData.links)
       .join("g");
-
-    /*
-    labelContainers.append("rect")
-      .attr("fill", "#1F2937")
-      .attr("rx", 12)
-      .attr("width", LABEL_WIDTH)
-      .attr("height", LABEL_HEIGHT)
-      .attr("opacity", 0.95);
-    */
 
     labelContainers.append("text")
       .attr("fill", "white")
@@ -646,26 +637,31 @@ export default function StakeholderAnalysis() {
       .text(d => d.label);
 
     // Add nodes with drag behavior
-    const nodes = nodeGroup.selectAll("g")
+    const dragBehavior = d3.drag<SVGGElement, Node>()
+      .on("start", function(event) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        const d = event.subject;
+        d.fx = d.x;
+        d.fy = d.y;
+      })
+      .on("drag", function(event) {
+        const d = event.subject;
+        d.fx = event.x;
+        d.fy = event.y;
+      })
+      .on("end", function(event) {
+        if (!event.active) simulation.alphaTarget(0);
+        const d = event.subject;
+        d.fx = null;
+        d.fy = null;
+      });
+
+    const nodes = nodeGroup.selectAll<SVGGElement, Node>("g")
       .data(graphData.nodes)
       .join("g")
       .attr("cursor", "pointer")
       .on("click", (event, d) => handleNodeClick(d))
-      .call(d3.drag<SVGGElement, Node>()
-        .on("start", function(event: d3.D3DragEvent<SVGGElement, Node, Node>, d: Node) {
-          if (!event.active) simulation.alphaTarget(0.3).restart();
-          d.fx = d.x;
-          d.fy = d.y;
-        })
-        .on("drag", function(event: d3.D3DragEvent<SVGGElement, Node, Node>, d: Node) {
-          d.fx = event.x;
-          d.fy = event.y;
-        })
-        .on("end", function(event: d3.D3DragEvent<SVGGElement, Node, Node>, d: Node) {
-          if (!event.active) simulation.alphaTarget(0);
-          d.fx = null;
-          d.fy = null;
-        }));
+      .call(dragBehavior);
 
     nodes.append("circle")
       .attr("r", NODE_RADIUS)
