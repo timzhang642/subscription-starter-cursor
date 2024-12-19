@@ -651,17 +651,17 @@ export default function StakeholderAnalysis() {
       .join("g")
       .attr("cursor", "pointer")
       .on("click", (event, d) => handleNodeClick(d))
-      .call(d3.drag()
-        .on("start", (event, d: any) => {
+      .call(d3.drag<SVGGElement, Node>()
+        .on("start", function(event: d3.D3DragEvent<SVGGElement, Node, Node>, d: Node) {
           if (!event.active) simulation.alphaTarget(0.3).restart();
           d.fx = d.x;
           d.fy = d.y;
         })
-        .on("drag", (event, d: any) => {
+        .on("drag", function(event: d3.D3DragEvent<SVGGElement, Node, Node>, d: Node) {
           d.fx = event.x;
           d.fy = event.y;
         })
-        .on("end", (event, d: any) => {
+        .on("end", function(event: d3.D3DragEvent<SVGGElement, Node, Node>, d: Node) {
           if (!event.active) simulation.alphaTarget(0);
           d.fx = null;
           d.fy = null;
