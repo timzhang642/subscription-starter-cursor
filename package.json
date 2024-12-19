@@ -1,7 +1,6 @@
 {
   "private": true,
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -22,7 +21,6 @@
     "supabase:push": "npx supabase db push",
     "supabase:pull": "npx supabase db pull"
   },
-  "packageManager": "pnpm@8.15.1",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
