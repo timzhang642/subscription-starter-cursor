@@ -151,7 +151,7 @@ export async function signInWithPassword(formData: FormData) {
     );
   } else if (data.user) {
     cookieStore.set('preferredSignInView', 'password_signin', { path: '/' });
-    redirectPath = getStatusRedirect('/', 'Success!', 'You are now signed in.');
+    redirectPath = getStatusRedirect('/stakeholder-analysis', 'Success!', 'You are now signed in.');
   } else {
     redirectPath = getErrorRedirect(
       '/signin/password_signin',
@@ -194,7 +194,7 @@ export async function signUp(formData: FormData) {
       error.message
     );
   } else if (data.session) {
-    redirectPath = getStatusRedirect('/', 'Success!', 'You are now signed in.');
+    redirectPath = getStatusRedirect('/stakeholder-analysis', 'Success!', 'You are now signed in.');
   } else if (
     data.user &&
     data.user.identities &&
@@ -207,7 +207,7 @@ export async function signUp(formData: FormData) {
     );
   } else if (data.user) {
     redirectPath = getStatusRedirect(
-      '/',
+      '/stakeholder-analysis',
       'Success!',
       'Please check your email for a confirmation link. You may now close this tab.'
     );
