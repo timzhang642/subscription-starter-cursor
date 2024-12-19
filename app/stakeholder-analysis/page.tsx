@@ -475,7 +475,7 @@ export default function StakeholderAnalysis() {
       setIsAnalyzingStep(true);
       setStepAnalysis(null);
       
-      const response = await fetch('/api/analyze-step', {
+      const response = await fetch('https://hook.us1.make.com/3q7bad3p5i76y1xvoqgzd6of12grodjh', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -494,21 +494,21 @@ export default function StakeholderAnalysis() {
 
       const data = await response.json();
       
-      if (!data.success) {
-        throw new Error(data.error || 'Failed to analyze step details');
+      // Update the response handling to match the webhook's format
+      if (!data || !data.painPoints) {
+        throw new Error('Invalid response format');
       }
 
       // Cache the results
       setAnalysisCache(prev => ({
         ...prev,
-        [cacheKey]: data.data
+        [cacheKey]: data
       }));
 
-      setStepAnalysis(data.data);
-      console.log('Step analysis:', data.data);
+      setStepAnalysis(data);
     } catch (error) {
       console.error('Error analyzing step:', error);
-      setError('Failed to analyze step details');
+      setError('Failed to analyze step details. Please try again.');
     } finally {
       setIsAnalyzingStep(false);
     }
